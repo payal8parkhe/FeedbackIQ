@@ -1,0 +1,10 @@
+{"query_id": "q1", "query": "login crash and authentication issues", "relevant_ids": [1, 3, 10, 12, 34, 38, 41]}
+{"query_id": "q2", "query": "battery drain and overheating", "relevant_ids": [16, 17, 49, 50, 82]}
+{"query_id": "q3", "query": "hidden cancel subscription button", "relevant_ids": [5, 9, 38, 42, 74]}
+{"query_id": "q4", "query": "offline sync lost notes and drafts", "relevant_ids": [18, 20, 51, 53, 84]}
+{"query_id": "q5", "query": "dark mode contrast and readability", "relevant_ids": [23, 24, 36, 56, 57]}
+{"query_id": "q6", "query": "slack webhook integration stopped working", "relevant_ids": [28, 30, 61, 63, 94]}
+{"query_id": "q7", "query": "double charged and refund pending", "relevant_ids": [7, 8, 40, 70, 103]}
+{"query_id": "q8", "query": "customer support slow automated reply", "relevant_ids": [7, 31, 32, 64, 97]}
+{"query_id": "q9", "query": "search not finding hyphens or names", "relevant_ids": [25, 27, 58, 60, 91]}
+{"query_id": "q10", "query": "PDF export corrupted format", "relevant_ids": [10, 43, 76, 109]}

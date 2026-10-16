@@ -1,0 +1,28 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "id": 3,
+  "panels": [
+    {
+      "title": "Search Latency (p95)",
+      "type": "stat",
+      "gridPos": { "h": 6, "w": 8, "x": 0, "y": 0 },
+      "targets": [{ "expr": "histogram_quantile(0.95, sum(rate(search_seconds_bucket[5m])) by (le))", "legendFormat": "p95 Search" }]
+    },
+    {
+      "title": "Grounded Q&A Latency (p95)",
+      "type": "stat",
+      "gridPos": { "h": 6, "w": 8, "x": 8, "y": 0 },
+      "targets": [{ "expr": "histogram_quantile(0.95, sum(rate(ask_seconds_bucket[5m])) by (le))", "legendFormat": "p95 Ask" }]
+    },
+    {
+      "title": "Latency Breakdown by Stage",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 16, "x": 0, "y": 6 },
+      "targets": [{ "expr": "rate(ask_seconds_sum[5m]) / rate(ask_seconds_count[5m])", "legendFormat": "{{stage}}" }]
+    }
+  ],
+  "schemaVersion": 38,
+  "title": "FeedbackIQ Latency Percentiles Dashboard",
+  "version": 1
+}

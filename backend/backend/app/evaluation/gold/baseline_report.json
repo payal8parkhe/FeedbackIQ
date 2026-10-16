@@ -1,0 +1,108 @@
+{
+  "timestamp": "2026-10-16T07:38:28.236755",
+  "split": "dev",
+  "sample_size": 180,
+  "naive_mode": true,
+  "model": "gpt-4o-mini",
+  "prompt_version": "v1",
+  "taxonomy_version": "v1",
+  "sentiment_metrics": {
+    "accuracy": 0.4444,
+    "macro_f1": 0.4071,
+    "confidence_interval_95": [
+      0.3738,
+      0.5174
+    ],
+    "per_class": {
+      "positive": {
+        "precision": 0.5918,
+        "recall": 0.5918,
+        "f1": 0.5918
+      },
+      "neutral": {
+        "precision": 0.0541,
+        "recall": 1.0,
+        "f1": 0.1026
+      },
+      "negative": {
+        "precision": 0.7917,
+        "recall": 0.4318,
+        "f1": 0.5588
+      },
+      "mixed": {
+        "precision": 1.0,
+        "recall": 0.2308,
+        "f1": 0.375
+      }
+    },
+    "confusion_matrix": [
+      [
+        29,
+        15,
+        5,
+        0
+      ],
+      [
+        0,
+        4,
+        0,
+        0
+      ],
+      [
+        5,
+        45,
+        38,
+        0
+      ],
+      [
+        15,
+        10,
+        5,
+        9
+      ]
+    ],
+    "labels": [
+      "positive",
+      "neutral",
+      "negative",
+      "mixed"
+    ]
+  },
+  "topic_metrics": {
+    "micro_f1": 0.8676,
+    "macro_f1": 0.8669,
+    "per_topic_f1": {
+      "app_crash": 1.0,
+      "battery_drain": 1.0,
+      "billing_pricing": 0.8,
+      "customer_support": 0.8571,
+      "dark_mode_design": 1.0,
+      "documentation": 1.0,
+      "export_import": 1.0,
+      "integrations_api": 0.7692,
+      "login_auth": 1.0,
+      "notification_overload": 0.6154,
+      "offline_sync": 0.8571,
+      "other": 0.6154,
+      "refund_payment": 1.0,
+      "search_retrieval": 1.0,
+      "slow_performance": 0.6667,
+      "subscription_cancellation": 0.8,
+      "ui_navigation": 0.7568
+    }
+  },
+  "schema_reliability": {
+    "valid_first_try": 180,
+    "repaired_count": 0,
+    "failed_count": 0,
+    "schema_valid_rate": 1.0
+  },
+  "cost_and_latency": {
+    "total_cost_usd": 0.025384,
+    "cost_per_1k_usd": 0.141,
+    "elapsed_ms": 25,
+    "avg_latency_ms": 0.14,
+    "total_input_tokens": 140267,
+    "total_output_tokens": 7231
+  }
+}

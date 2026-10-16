@@ -1,0 +1,28 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "id": 2,
+  "panels": [
+    {
+      "title": "Total Spend (USD)",
+      "type": "stat",
+      "gridPos": { "h": 6, "w": 8, "x": 0, "y": 0 },
+      "targets": [{ "expr": "sum(llm_cost_usd_total)", "legendFormat": "USD" }]
+    },
+    {
+      "title": "Daily Budget Ratio",
+      "type": "gauge",
+      "gridPos": { "h": 6, "w": 8, "x": 8, "y": 0 },
+      "targets": [{ "expr": "daily_budget_used_ratio" }]
+    },
+    {
+      "title": "Tokens Consumed (Input vs Output)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 16, "x": 0, "y": 6 },
+      "targets": [{ "expr": "rate(llm_tokens_total[5m])", "legendFormat": "{{direction}}" }]
+    }
+  ],
+  "schemaVersion": 38,
+  "title": "FeedbackIQ Cost & Observability Dashboard",
+  "version": 1
+}

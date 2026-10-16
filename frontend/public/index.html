@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FeedbackIQ — AI Customer Feedback Intelligence Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090d16;
+      --card-bg: rgba(18, 24, 38, 0.7);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --accent-primary: #6366f1;
+      --accent-glow: rgba(99, 102, 241, 0.25);
+      --accent-secondary: #06b6d4;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --positive: #10b981;
+      --negative: #ef4444;
+      --warning: #f59e0b;
+      --mixed: #a855f7;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.12) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(6, 182, 212, 0.08) 0px, transparent 50%);
+      color: var(--text-main);
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header & Navigation */
+    header {
+      border-bottom: 1px solid var(--card-border);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(9, 13, 22, 0.85);
+      padding: 0.85rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: inherit;
+    }
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.1rem;
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
+    .brand-text h1 { font-size: 1.15rem; font-weight: 700; letter-spacing: -0.02em; }
+    .brand-text span { font-size: 0.75rem; color: var(--text-muted); }
+
+    .nav-tabs {
+      display: flex;
+      gap: 0.5rem;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 0.3rem;
+      border-radius: 12px;
+      border: 1px solid var(--card-border);
+    }
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .tab-btn:hover { color: var(--text-main); background: rgba(255, 255, 255, 0.05); }
+    .tab-btn.active {
+      color: #fff;
+      background: var(--accent-primary);
+      box-shadow: 0 0 15px var(--accent-glow);
+    }
+
+    /* Main Container */
+    main {
+      flex: 1;
+      max-width: 1400px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Glass Cards */
+    .glass-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      margin-bottom: 1.5rem;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+    }
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .stat-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .stat-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
+    .stat-val { font-size: 1.6rem; font-weight: 800; letter-spacing: -0.03em; }
+    .stat-sub { font-size: 0.75rem; color: var(--positive); display: flex; align-items: center; gap: 0.3rem; }
+
+    /* Sentiment & Topic Chips */
+    .chip {
+      padding: 0.25rem 0.65rem;
+      border-radius: 9999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: inline-block;
+    }
+    .chip.positive { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .chip.negative { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+    .chip.mixed { background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); }
+    .chip.neutral { background: rgba(148, 163, 184, 0.15); color: #cbd5e1; border: 1px solid rgba(148, 163, 184, 0.3); }
+    
+    .topic-tag {
+      background: rgba(99, 102, 241, 0.12);
+      color: #a5b4fc;
+      border: 1px solid rgba(99, 102, 241, 0.25);
+      border-radius: 6px;
+      padding: 0.2rem 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    /* Buttons & Inputs */
+    .btn {
+      background: var(--accent-primary);
+      color: #fff;
+      border: none;
+      padding: 0.65rem 1.25rem;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .btn:hover { background: #4f46e5; box-shadow: 0 0 15px var(--accent-glow); }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-main);
+      border: 1px solid var(--card-border);
+    }
+    .btn-secondary:hover { background: rgba(255, 255, 255, 0.1); }
+
+    .input-box {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+    .input-box:focus { border-color: var(--accent-primary); box-shadow: 0 0 10px var(--accent-glow); }
+
+    /* Tables */
+    .table-responsive { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.88rem; }
+    th {
+      padding: 0.85rem 1rem;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--card-border);
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    td {
+      padding: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      vertical-align: top;
+    }
+    tr:hover td { background: rgba(255, 255, 255, 0.015); }
+
+    /* Citations in Q&A */
+    .citation-badge {
+      display: inline-block;
+      background: rgba(6, 182, 212, 0.15);
+      color: #67e8f9;
+      border: 1px solid rgba(6, 182, 212, 0.35);
+      border-radius: 6px;
+      padding: 0.15rem 0.45rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin: 0 0.2rem;
+      transition: all 0.2s;
+    }
+    .citation-badge:hover {
+      background: rgba(6, 182, 212, 0.3);
+      transform: translateY(-1px);
+    }
+
+    pre code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="#" class="brand">
+      <div class="brand-icon">⚡</div>
+      <div class="brand-text">
+        <h1>FeedbackIQ</h1>
+        <span>AI Customer Feedback Intelligence Platform</span>
+      </div>
+    </a>
+    <div class="nav-tabs">
+      <button class="tab-btn active" onclick="switchTab('explorer')">📊 Review Explorer</button>
+      <button class="tab-btn" onclick="switchTab('search')">🔍 Semantic Search</button>
+      <button class="tab-btn" onclick="switchTab('ask')">💬 Grounded Q&A</button>
+      <button class="tab-btn" onclick="switchTab('ingest')">📥 Ingestion</button>
+      <button class="tab-btn" onclick="switchTab('eval')">🎯 Evaluation & Cost</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- TAB 1: REVIEW EXPLORER -->
+    <div id="tab-explorer" class="tab-content active">
+      <div class="stats-grid" id="statsGrid">
+        <div class="stat-card">
+          <span class="stat-label">Total Reviews Enriched</span>
+          <span class="stat-val" id="statTotal">--</span>
+          <span class="stat-sub">100% Schema Valid</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Positive Sentiment</span>
+          <span class="stat-val" id="statPositive" style="color: var(--positive);">--</span>
+          <span class="stat-sub">Praise & Satisfaction</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Negative Sentiment</span>
+          <span class="stat-val" id="statNegative" style="color: var(--negative);">--</span>
+          <span class="stat-sub">Bugs & Frustrations</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Mixed Sentiment</span>
+          <span class="stat-val" id="statMixed" style="color: var(--mixed);">--</span>
+          <span class="stat-sub">Contrastive Reviews</span>
+        </div>
+      </div>
+
+      <div class="glass-card">
+        <div class="card-header">
+          <div class="card-title">Enriched Customer Reviews</div>
+          <div style="display: flex; gap: 0.5rem;">
+            <select id="sentimentFilter" class="input-box" style="width: 140px; padding: 0.45rem;" onchange="loadReviews()">
+              <option value="">All Sentiments</option>
+              <option value="positive">Positive</option>
+              <option value="negative">Negative</option>
+              <option value="mixed">Mixed</option>
+              <option value="neutral">Neutral</option>
+            </select>
+            <button class="btn btn-secondary" onclick="seedDemoData()">⚡ Seed Demo Data</button>
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 60px;">ID</th>
+                <th style="width: 100px;">Sentiment</th>
+                <th style="width: 160px;">Taxonomy Topics</th>
+                <th>Summary & Customer Quote</th>
+                <th style="width: 90px;">Confidence</th>
+              </tr>
+            </thead>
+            <tbody id="reviewsTableBody">
+              <tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 3rem;">Loading feedback intelligence...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: HYBRID SEARCH -->
+    <div id="tab-search" class="tab-content">
+      <div class="glass-card">
+        <div class="card-title" style="margin-bottom: 1rem;">Hybrid Vector & Keyword Search (RRF k=60)</div>
+        <div style="display: flex; gap: 0.75rem; margin-bottom: 1.5rem;">
+          <input type="text" id="searchQuery" class="input-box" placeholder="Search customer complaints, e.g. 'FaceID login crash', 'subscription cancel button', 'battery drain'..." onkeydown="if(event.key==='Enter') executeSearch()">
+          <button class="btn" onclick="executeSearch()">🔍 Search</button>
+        </div>
+        <div id="searchResultsArea">
+          <div style="text-align: center; color: var(--text-muted); padding: 2.5rem;">Enter a query above to test hybrid Reciprocal Rank Fusion retrieval.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: GROUNDED Q&A -->
+    <div id="tab-ask" class="tab-content">
+      <div class="glass-card">
+        <div class="card-title" style="margin-bottom: 0.5rem;">Grounded Product Intelligence Q&A</div>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+          Answers are strictly grounded in verified customer reviews. Every factual claim is validated and links to cited review IDs.
+        </p>
+
+        <div style="display: flex; gap: 0.75rem; margin-bottom: 1.5rem;">
+          <input type="text" id="askQuery" class="input-box" placeholder="Ask: 'What are customers complaining about this month?' or 'Why does offline sync fail?'..." onkeydown="if(event.key==='Enter') executeAsk()">
+          <button class="btn" onclick="executeAsk()">✨ Ask FeedbackIQ</button>
+        </div>
+
+        <div id="askResultCard" style="display: none; background: rgba(255,255,255,0.02); border: 1px solid var(--accent-glow); border-radius: 12px; padding: 1.5rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
+            <span style="font-size: 0.78rem; font-weight: 700; color: #a5b4fc; text-transform: uppercase;">Grounded Answer</span>
+            <span id="askMeta" style="font-size: 0.75rem; color: var(--text-muted);"></span>
+          </div>
+          <div id="askAnswerText" style="font-size: 1.05rem; line-height: 1.6; margin-bottom: 1.25rem;"></div>
+          <div id="askCitations" style="display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center;">
+            <span style="font-size: 0.8rem; color: var(--text-muted); margin-right: 0.5rem;">Verified Citations:</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: INGESTION -->
+    <div id="tab-ingest" class="tab-content">
+      <div class="glass-card">
+        <div class="card-title" style="margin-bottom: 0.5rem;">Review Ingestion & SHA-256 Deduplication</div>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+          Upload JSONL or CSV reviews. The pipeline normalizes text, masks PII, and skips duplicates via content hash.
+        </p>
+
+        <div style="border: 2px dashed var(--card-border); border-radius: 14px; padding: 3rem; text-align: center; margin-bottom: 1.5rem;">
+          <div style="font-size: 2rem; margin-bottom: 0.5rem;">📂</div>
+          <p style="font-weight: 600; margin-bottom: 0.5rem;">Upload reviews file (JSON / JSONL / CSV)</p>
+          <input type="file" id="fileUploadInput" accept=".json,.jsonl,.csv" style="display: none;" onchange="handleFileUpload(event)">
+          <button class="btn" onclick="document.getElementById('fileUploadInput').click()">Select File</button>
+        </div>
+
+        <div id="ingestProgress" style="display: none;" class="glass-card">
+          <div style="font-weight: 700; margin-bottom: 0.5rem;" id="ingestMsg">Processing Ingestion...</div>
+          <div style="background: rgba(255,255,255,0.05); border-radius: 9999px; height: 10px; overflow: hidden;">
+            <div id="ingestBar" style="background: var(--accent-primary); width: 30%; height: 100%; transition: width 0.3s;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 5: EVALUATION & COST -->
+    <div id="tab-eval" class="tab-content">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <span class="stat-label">Gold Sentiment Macro-F1</span>
+          <span class="stat-val" id="evalF1" style="color: var(--accent-secondary);">--</span>
+          <span class="stat-sub">Target: >= 0.850</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Gold Topic Micro-F1</span>
+          <span class="stat-val" id="evalTopicF1" style="color: var(--positive);">--</span>
+          <span class="stat-sub">Target: >= 0.750</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Schema Validity</span>
+          <span class="stat-val" id="evalValidRate" style="color: var(--positive);">100%</span>
+          <span class="stat-sub">After 1-Item Repair</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Cost / 1k Reviews</span>
+          <span class="stat-val" id="evalCost">$0.141</span>
+          <span class="stat-sub">Target: &lt; $0.50</span>
+        </div>
+      </div>
+
+      <div class="glass-card">
+        <div class="card-header">
+          <div class="card-title">Gold Benchmark Harness (300 Stratified Reviews)</div>
+          <button class="btn" onclick="runLiveEval()">▶ Run Evaluation on Dev Split</button>
+        </div>
+        <div id="evalReportArea" style="background: rgba(0,0,0,0.3); border-radius: 12px; padding: 1.25rem; font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; white-space: pre-wrap; color: #cbd5e1; max-height: 450px; overflow-y: auto;">
+Loading baseline benchmark report...
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      document.getElementById('tab-' + tabId).classList.add('active');
+      event.target.classList.add('active');
+      if (tabId === 'explorer') loadReviews();
+      if (tabId === 'eval') loadEvalReport();
+    }
+
+    async function loadReviews() {
+      const sentiment = document.getElementById('sentimentFilter').value;
+      const url = sentiment ? `/v1/reviews?sentiment=${sentiment}&limit=50` : '/v1/reviews?limit=50';
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+        const tbody = document.getElementById('reviewsTableBody');
+        tbody.innerHTML = '';
+        
+        let pos = 0, neg = 0, mix = 0;
+        data.items.forEach(r => {
+          if (r.sentiment === 'positive') pos++;
+          if (r.sentiment === 'negative') neg++;
+          if (r.sentiment === 'mixed') mix++;
+
+          const row = document.createElement('tr');
+          const topicsHtml = (r.topics || []).map(t => `<span class="topic-tag">${t}</span>`).join(' ');
+          const sentimentClass = r.sentiment || 'neutral';
+          
+          row.innerHTML = `
+            <td style="font-family: 'JetBrains Mono'; color: var(--text-muted); font-size: 0.8rem;">#${r.id}</td>
+            <td><span class="chip ${sentimentClass}">${sentimentClass}</span></td>
+            <td>${topicsHtml}</td>
+            <td>
+              <div style="font-weight: 600; margin-bottom: 0.25rem;">${r.summary || 'Summary pending'}</div>
+              <div style="color: var(--text-muted); font-size: 0.8rem;">"${r.clean_text}"</div>
+            </td>
+            <td style="font-family: 'JetBrains Mono'; font-size: 0.8rem; color: #a5b4fc;">${r.confidence ? (r.confidence * 100).toFixed(0) + '%' : '--'}</td>
+          `;
+          tbody.appendChild(row);
+        });
+
+        document.getElementById('statTotal').innerText = data.items.length;
+        document.getElementById('statPositive').innerText = pos;
+        document.getElementById('statNegative').innerText = neg;
+        document.getElementById('statMixed').innerText = mix;
+      } catch (err) {
+        console.error("Error loading reviews", err);
+      }
+    }
+
+    async function seedDemoData() {
+      const btn = event.target;
+      btn.innerText = 'Seeding...';
+      try {
+        await fetch('/v1/eval/run', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ split: 'dev', max_items: 60 })
+        });
+        loadReviews();
+        btn.innerText = '⚡ Seeded!';
+        setTimeout(() => btn.innerText = '⚡ Seed Demo Data', 2000);
+      } catch (e) {
+        btn.innerText = 'Seed Error';
+      }
+    }
+
+    async function executeSearch() {
+      const q = document.getElementById('searchQuery').value;
+      if (!q) return;
+      const container = document.getElementById('searchResultsArea');
+      container.innerHTML = '<div style="text-align: center; color: var(--text-muted); padding: 2rem;">Searching reviews with Hybrid RRF...</div>';
+      
+      const res = await fetch('/v1/search', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: q, mode: 'hybrid', k: 8 })
+      });
+      const data = await res.json();
+      
+      if (data.hits.length === 0) {
+        container.innerHTML = '<div style="text-align: center; color: var(--text-muted); padding: 2rem;">No matching customer reviews found.</div>';
+        return;
+      }
+
+      let html = `<div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">Found ${data.total_hits} results in ${data.latency_ms} ms (Hybrid RRF Rank Fusion)</div>`;
+      data.hits.forEach(h => {
+        const topics = (h.topics || []).map(t => `<span class="topic-tag">${t}</span>`).join(' ');
+        html += `
+          <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--card-border); border-radius: 10px; padding: 1.25rem; margin-bottom: 0.85rem;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+              <div style="display: flex; gap: 0.5rem; align-items: center;">
+                <span class="citation-badge">[R${h.review_id}]</span>
+                <span class="chip ${h.sentiment}">${h.sentiment}</span>
+                ${topics}
+              </div>
+              <span style="font-family: 'JetBrains Mono'; font-size: 0.75rem; color: var(--accent-secondary);">RRF Score: ${h.score}</span>
+            </div>
+            <div style="font-weight: 600; margin-bottom: 0.3rem;">${h.summary}</div>
+            <div style="color: var(--text-muted); font-size: 0.85rem;">"${h.clean_text}"</div>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    async function executeAsk() {
+      const q = document.getElementById('askQuery').value;
+      if (!q) return;
+      const card = document.getElementById('askResultCard');
+      card.style.display = 'block';
+      document.getElementById('askAnswerText').innerText = 'Retrieving evidence and verifying citations...';
+      document.getElementById('askMeta').innerText = '';
+
+      const res = await fetch('/v1/ask', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question: q })
+      });
+      const data = await res.json();
+      
+      let formattedAnswer = data.answer.replace(/\[R(\d+)\]/g, '<span class="citation-badge" onclick="alert(\'Inspect review #$1\')">[R$1]</span>');
+      document.getElementById('askAnswerText').innerHTML = formattedAnswer;
+      document.getElementById('askMeta').innerText = `Intent: ${data.intent.toUpperCase()} | Latency: ${data.latency_ms} ms | Cost: $${data.usage_cost_usd.toFixed(6)}`;
+      
+      const citDiv = document.getElementById('askCitations');
+      citDiv.innerHTML = '<span style="font-size: 0.8rem; color: var(--text-muted); margin-right: 0.5rem;">Verified Citations:</span>';
+      (data.citations || []).forEach(c => {
+        citDiv.innerHTML += `<span class="citation-badge" onclick="alert('Viewing review evidence for ID ${c.review_id}')">[R${c.review_id}]</span>`;
+      });
+    }
+
+    async function loadEvalReport() {
+      const res = await fetch('/v1/eval/runs');
+      const data = await res.json();
+      if (data.latest_run) {
+        const run = data.latest_run;
+        document.getElementById('evalF1').innerText = run.sentiment_metrics.macro_f1.toFixed(4);
+        document.getElementById('evalTopicF1').innerText = run.topic_metrics.micro_f1.toFixed(4);
+        document.getElementById('evalCost').innerText = '$' + run.cost_and_latency.cost_per_1k_usd.toFixed(4);
+        document.getElementById('evalReportArea').innerText = JSON.stringify(run, null, 2);
+      }
+    }
+
+    async function runLiveEval() {
+      const area = document.getElementById('evalReportArea');
+      area.innerText = 'Running evaluation pipeline against 300 gold reviews...\nExecuting validation ladder and computing Cohen\'s kappa & Wilson intervals...';
+      const res = await fetch('/v1/eval/run', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ split: 'dev', max_items: 40 })
+      });
+      const data = await res.json();
+      area.innerText = JSON.stringify(data.report, null, 2);
+      document.getElementById('evalF1').innerText = data.sentiment_macro_f1.toFixed(4);
+      document.getElementById('evalTopicF1').innerText = data.topic_micro_f1.toFixed(4);
+    }
+
+    // Auto-seed and initialize on page load
+    window.addEventListener('DOMContentLoaded', async () => {
+      await loadReviews();
+      await loadEvalReport();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 1,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "title": "Sentiment Accuracy & Macro-F1",
+      "type": "stat",
+      "gridPos": { "h": 6, "w": 12, "x": 0, "y": 0 },
+      "targets": [{ "expr": "latest_eval_sentiment_macro_f1", "legendFormat": "Macro-F1" }]
+    },
+    {
+      "title": "Topic Micro-F1",
+      "type": "stat",
+      "gridPos": { "h": 6, "w": 12, "x": 12, "y": 0 },
+      "targets": [{ "expr": "latest_eval_topic_micro_f1", "legendFormat": "Micro-F1" }]
+    },
+    {
+      "title": "Schema Valid Rate After Repair",
+      "type": "gauge",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 6 },
+      "targets": [{ "expr": "rate(enrich_reviews_total{outcome='ok'}[5m]) / rate(enrich_reviews_total[5m])" }]
+    },
+    {
+      "title": "Dead-Letter / Repair Rate",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 6 },
+      "targets": [{ "expr": "rate(enrich_reviews_total{outcome='repaired'}[5m])", "legendFormat": "Repairs" }]
+    }
+  ],
+  "schemaVersion": 38,
+  "title": "FeedbackIQ Quality & Accuracy Dashboard",
+  "version": 1
+}
